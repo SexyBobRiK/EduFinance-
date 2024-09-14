@@ -10,7 +10,8 @@ const api = axios.create({
     },
 });
 
-export const userRegistration = async (name, lastName, email, password, age) => {
+
+export const userRegistration = async (name: string, lastName: string, email: string, password: string, age: string) => {
     try {
         const response = await api.post('/register', {
             name,
@@ -26,5 +27,21 @@ export const userRegistration = async (name, lastName, email, password, age) => 
        store.setTypeModal(0)
        store.toggleModal(true);
     }
+}
+
+export const userLogin = async (email: string, password: string) => {
+    try {
+        const response = await api.post('/login', {
+            email,
+            password,
+        });
+        return response.data;
+    } catch (error) {
+       console.log(error);
+       store.setModalText('Ошибка!');
+       store.setTypeModal(0)
+       store.toggleModal(true);
+    }
+    
 }
 
