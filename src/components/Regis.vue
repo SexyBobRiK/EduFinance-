@@ -29,11 +29,8 @@
                     <input type="password" id="twopassword" v-model="twoPassword" required>
                 </div>
                 <div>
-                    <button 
-                    :disabled="btActive()" 
-                    @click="registrationAxios"
-                    :class="btActive() ? 'disabled-button' : 'enabled-button'"
-                    >РЕГИСТРАЦИЯ</button>
+                    <button :disabled="btActive()" @click="registrationAxios"
+                        :class="btActive() ? 'disabled-button' : 'enabled-button'">РЕГИСТРАЦИЯ</button>
                 </div>
                 <router-link to="/">Войти?</router-link>
             </div>
@@ -70,14 +67,14 @@ const activeInput = computed(() => {
     };
 });
 
-const registrationAxios = async () => { 
+const registrationAxios = async () => {
     if (password.value != twoPassword.value) {
         alert('Пароли не совпадают!');
         return;
     }
     try {
-      const results = await userRegistration(name.value, lastName.value, email.value, password.value, age.value);
-        const res = results.message   
+        const results = await userRegistration(name.value, lastName.value, email.value, password.value, age.value);
+        const res = results.message
         if (res === 'Email already exists') {
             store.setModalText('Email уже занят!');
             store.setTypeModal(0)
@@ -90,13 +87,13 @@ const registrationAxios = async () => {
     } catch (error) {
         console.error(error.message);
     }
- }
+}
 
 // Валидация полей
 const btActive = () => {
     for (const key in activeInput.value) {
-        if (activeInput.value[key] === '' || 
-            activeInput.value['password'].length < 8 || 
+        if (activeInput.value[key] === '' ||
+            activeInput.value['password'].length < 8 ||
             activeInput.value['twoPassword'].length < 8) {
             return true;
         }
@@ -205,10 +202,11 @@ input::placeholder {
 .enabled-button:focus {
     outline: none;
 }
+
 .disabled-button {
-  background-color: gray;
-  cursor: not-allowed;
-  padding: 12px 24px;
+    background-color: gray;
+    cursor: not-allowed;
+    padding: 12px 24px;
     font-size: 14px;
     font-weight: bold;
     color: white;
