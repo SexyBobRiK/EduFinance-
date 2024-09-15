@@ -8,6 +8,9 @@ interface ModalState {
     typeModal: number;
     modalText: string;
 }
+interface Token {
+    token: boolean;
+}
 
 export const useRegStore = defineStore("reg", { 
     state: (): RegState => {
@@ -34,6 +37,23 @@ export const useModalState = defineStore("modal", {
         },
         setModalText(text: string): void{
             this.modalText = text;
+        }
+    }
+});
+
+
+export const useTokenStore = defineStore("token", {
+    state: (): Token => {
+        return {
+            token: false
+        };
+    },
+    actions: {
+        setToken( tokenStatus: boolean): void{
+            this.token = tokenStatus;
+        },
+        logout() {
+            this.$reset();
         }
     }
 });
