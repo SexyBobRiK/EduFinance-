@@ -30,10 +30,11 @@ import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useRegStore } from '../store/store';
 import Modal from '../components/UI/Modal.vue';
-import { useModalState } from '../store/store'
+import { useModalState, useTokenStore } from '../store/store'
 import { userLogin } from '../service/api';
 
 const activeRegForm = useRegStore();
+const tokenStore = useTokenStore();
 const router = useRouter();
 const modal = useModalState();
 
@@ -65,13 +66,14 @@ const getAxiosEntrance = async () => {
       return
     }
       localStorage.setItem('token', response.token);
+      tokenStore.setToken(true);
       router.push('/home');
   } catch (error) {
     console.error(error.message);
   }
 }
 // Валидация полей
-const btActive = () => {
+const btActive = (): boolean => {
     for (const key in activeInput.value) {
         if (activeInput.value[key] === '' ||
             activeInput.value['password'].length < 8) {
@@ -84,6 +86,7 @@ const btActive = () => {
 
 <style scoped>
 .main {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
