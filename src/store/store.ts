@@ -11,6 +11,10 @@ interface ModalState {
 interface Token {
     token: boolean;
 }
+interface CauseModalInsert {
+    isOpen: boolean;
+    causeType: number;
+}
 
 export const useRegStore = defineStore("reg", { 
     state: (): RegState => {
@@ -54,6 +58,21 @@ export const useTokenStore = defineStore("token", {
         },
         logout() {
             this.$reset();
+        }
+    }
+});
+
+export const useCauseModalInsert = defineStore("causeModalInsert", {
+    state: (): CauseModalInsert => {
+        return {
+            isOpen: false,
+            causeType: 1
+        };
+    },
+    actions: {
+        toggleCauseModal(state: boolean, type: number): void{
+            this.isOpen = state;
+            this.causeType = type;
         }
     }
 });
