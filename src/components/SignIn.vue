@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useRegStore } from '../store/store';
 import Modal from '../components/UI/Modal.vue';
 import { useModalState, useTokenStore } from '../store/store'
@@ -42,7 +42,7 @@ const email = ref('');
 const password = ref('');
 
 // Объект для валидации полей
-const activeInput = computed(() => {
+const activeInput = computed((): any => {
   return {
     email: email.value,
     password: password.value,
@@ -67,8 +67,8 @@ const getAxiosEntrance = async () => {
     }
       localStorage.setItem('token', response.token);
       tokenStore.setToken(true);
-      router.push('/home');
-  } catch (error) {
+      router.push('/graphs');
+  } catch (error: any) {
     console.error(error.message);
   }
 }

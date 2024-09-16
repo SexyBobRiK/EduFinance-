@@ -40,12 +40,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+
 import { userRegistration } from '../service/api';
 import { useModalState } from '../store/store'
 import Modal from './UI/Modal.vue';
 
-const router = useRouter();
+
 const store = useModalState();
 
 const name = ref('');
@@ -54,9 +54,9 @@ const age = ref('');
 const email = ref('');
 const password = ref('');
 const twoPassword = ref('');
-const modalText = ref('')
+
 // Объект для валидации полей
-const activeInput = computed(() => {
+const activeInput = computed((): any => {
     return {
         name: name.value,
         lastName: lastName.value,
@@ -84,8 +84,8 @@ const registrationAxios = async () => {
             store.setTypeModal(1)
             store.toggleModal(true);
         }
-    } catch (error) {
-        console.error(error.message);
+    } catch (error: any) {
+        console.log(error.message);
     }
 }
 
@@ -104,6 +104,7 @@ const btActive = () => {
 
 <style scoped>
 .main {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
