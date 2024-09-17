@@ -53,11 +53,15 @@ export const useTokenStore = defineStore("token", {
         };
     },
     actions: {
-        setToken( tokenStatus: boolean): void{
-            this.token = tokenStatus;
+        setToken( tokenSt: boolean): void{
+            this.token = tokenSt;
+            console.log('ww');
+            
         },
-        logout() {
-            this.$reset();
+        logout( tokenStatus: boolean): void {
+            this.token = tokenStatus;
+            console.log('Resr');
+            
         }
     }
 });

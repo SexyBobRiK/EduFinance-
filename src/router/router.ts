@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw, NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 import { useTokenStore } from "../store/store";
-import Management from "../components/Management.vue";
+
 
 // Middleware for authenticated routes
 const AuthenticatedMiddleware = (
@@ -9,6 +9,8 @@ const AuthenticatedMiddleware = (
     next: NavigationGuardNext) => {
     const tokenStore = useTokenStore();
     if (tokenStore.token) {
+        console.log('test');
+        
         next();
     } else {
         next('/');
@@ -30,12 +32,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "/graphs",
         name: "graphs",
         component: () => import("../components/Chart.vue"),
-        beforeEnter: AuthenticatedMiddleware,
+       // beforeEnter: AuthenticatedMiddleware,
     },
     {
         path: "/management",
         name: "Management",
         component: () => import("../components/Management.vue"),
+       // beforeEnter: AuthenticatedMiddleware,
     }
 ];
 

@@ -21,20 +21,24 @@ import { useCauseModalInsert } from '../../store/store';
 import {insertCause } from '../../service/api'
 const storeCause = useCauseModalInsert();
 
+const emit = defineEmits(['closeModal']);
+
 const causeName = ref('');
 const insertCauseAixos = async () => {
     try {
         const response = await insertCause(causeName.value,storeCause.causeType)
-        console.log(response);
         storeCause.toggleCauseModal(false, 1);
+        emit('closeModal');
     } catch (error: any) {
         console.error(error.message);
+        emit('closeModal');
     }
 
 }
 
 const closeModal = () => {
     storeCause.toggleCauseModal(false, 1);
+    emit('closeModal');
 };
 
 </script>
