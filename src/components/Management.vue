@@ -1,5 +1,6 @@
 <template>
-    <CauseInsert />
+    <Modal />
+    <CauseInsert @close-modal="get" />
     <div class="main">
         <div class="main-block-button">
             <div><button class="btn">Доходы</button></div>
@@ -9,57 +10,57 @@
             <div class="form-block">
                 <div class="form-group">
                     <p>Сумма дохода</p>
-                    <input type="number" class="input-field">
+                    <input type="number" v-model="incomeSum" class="input-field">
                 </div>
                 <div class="form-group">
                     <p>Дата дохода</p>
-                    <input type="date" class="input-field">
+                    <input type="date" v-model="incomeDate" class="input-field">
                 </div>
                 <div class="form-group form-sel-main">
                     <div class="form-group-sel">
                         <p>Источник Дохода</p>
-                        <select class="input-field inp-select">
-                            <option value="salary">Зарплата</option>
-                            <option value="investment">Инвестиции</option>
-                            <option value="freelance">Фриланс</option>
-                            <option value="other">Прочее</option>
+                        <select class="input-field inp-select" v-model="selectedCauseId">
+                            <option v-for="item in selectCauses" :key="item.cs_id" :value="item.cs_id">
+                                {{ item.cs_causevalue }}
+                            </option>
                         </select>
+
                     </div>
                     <div class="main-btn-new">
-                      <button @click="openInsertCause(1)" class="add-btn btn-new-select">Создать</button>  
+                        <button @click="openInsertCause(1)" class="add-btn btn-new-select">Создать</button>
                     </div>
-                    
+
                 </div>
                 <div>
-                    <button class="add-btn">Добавить</button>
+                    <button @click="insertIncome(1)" class="add-btn">Добавить</button>
                 </div>
             </div>
             <div class="form-block">
                 <div class="form-group">
                     <p>Сумма расхода</p>
-                    <input type="number" class="input-field">
+                    <input type="number" v-model="orderSum" class="input-field">
                 </div>
                 <div class="form-group">
                     <p>Дата расхода</p>
-                    <input type="date" class="input-field">
+                    <input type="date" v-model="orderDate" class="input-field">
                 </div>
                 <div class="form-group form-sel-main">
                     <div class="form-group-sel">
                         <p>Источник расхода</p>
-                        <select class="input-field inp-select">
-                            <option value="salary">Зарплата</option>
-                            <option value="investment">Инвестиции</option>
-                            <option value="freelance">Фриланс</option>
-                            <option value="other">Прочее</option>
+                        <select v-model="selectedOrderCauseId" class="input-field inp-select">
+                            <option 
+                            :value="items.cs_id"
+                            v-for="items in selectOrder" 
+                            :key="items.cs_id">{{ items.cs_causevalue }}
+                            </option>
                         </select>
                     </div>
                     <div class="main-btn-new">
-                      <button @click="openInsertCause(2)" class="add-btn btn-new-select">Создать</button>  
+                        <button @click="openInsertCause(2)" class="add-btn btn-new-select">Создать</button>
                     </div>
-                    
                 </div>
                 <div>
-                    <button class="add-btn">Добавить</button>
+                    <button @click="insertIncome(2)" class="add-btn">Добавить</button>
                 </div>
             </div>
         </div>
@@ -68,14 +69,84 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useCauseModalInsert } from '../store/store'
-import  CauseInsert  from './UI/CauseInsert.vue';
+import { useCauseModalInsert, useModalState } from '../store/store';
+import { getCauses, getCausesOrder, postInsertManagement } from '../service/api';
+import CauseInsert from './UI/CauseInsert.vue';
+import Modal from './UI/Modal.vue';
+
 
 const causeStore = useCauseModalInsert();
+const store = useModalState();
+
+const incomeSum = ref<number>(0);
+const incomeDate = ref('');
+const selectedCauseId = ref();
+
+const orderSum = ref<number>(0);
+const orderDate = ref('');
+const selectedOrderCauseId = ref();
+
+const selectCauses = ref<Array<any>>([]);
+const selectOrder = ref<Array<any>>([]);
+
+
+const insertIncome = async (typeID: number) => {
+    try {
+
+        if (typeID === 1) {
+         await postInsertManagement(incomeSum.value, incomeDate.value, selectedCauseId.value, typeID);
+        store.setModalText('Доход добавлен!');
+        store.setTypeModal(1)
+        store.toggleModal(true);
+        incomeSum.value = 0;
+        incomeDate.value = '';
+        selectedCauseId.value = '';   
+        } else if (typeID === 2) {
+         await postInsertManagement(orderSum.value, orderDate.value, selectedOrderCauseId.value, typeID);
+         store.setModalText('Расход добавлен!');
+         store.setTypeModal(1)
+         store.toggleModal(true);
+         orderSum.value = 0;
+         orderDate.value = '';
+         selectedOrderCauseId.value = '';
+        }
+        
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+
+const getAxiosIncome = async () => {
+    try {
+        const res = await getCauses();
+        selectCauses.value = res;
+    } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+    }
+};
+const getAxiosOrder = async () => {
+    try {
+        const res = await getCausesOrder();
+        selectOrder.value = res;
+    } catch (error) {
+        console.error("Ошибка при получении данных:", error);
+    }
+};
 
 const openInsertCause = (id: number): void => {
-  causeStore.toggleCauseModal(true, id);
-}
+    causeStore.toggleCauseModal(true, id);
+};
+
+const get = (): void => {
+    getAxiosIncome();
+    getAxiosOrder();
+};
+
+getAxiosIncome();
+getAxiosOrder()
 </script>
 
 <style scoped>
@@ -84,11 +155,13 @@ const openInsertCause = (id: number): void => {
     display: flex;
     flex-direction: column;
 }
+
 .btn-new-select {
     width: 70%;
     height: 40px;
     background-color: #007bff !important;
 }
+
 .main-btn-new {
     width: 40%;
     height: 100%;

@@ -63,9 +63,8 @@ const getAxiosEntrance = async () => {
       modal.setTypeModal(0)
       password.value = '';
       modal.toggleModal(true);
-      return
+      return 
     }
-      localStorage.setItem('token', response.token);
       tokenStore.setToken(true);
       router.push('/graphs');
   } catch (error: any) {

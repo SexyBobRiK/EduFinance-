@@ -21,7 +21,7 @@
         </div>
 
         <div class="footer">
-            <button @click="storeToken.logout" class="exit-button">Выход</button>
+            <button @click="storeToken.logout(false)" class="exit-button">Выход</button>
         </div>
     </div>
 </template>
