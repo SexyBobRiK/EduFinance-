@@ -114,6 +114,18 @@ export const postInsertManagement = async (sum: number, date: string, causeID: n
     }
 }
 
+export const getManagements = async () => {
+    try {
+        const response = await api.get('managements/get-managements');
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        store.setModalText('Ошибка!');
+        store.setTypeModal(0);
+        store.toggleModal(true);
+    }
+}
+
 // Установка токена из localStorage при инициализации
 const token = localStorage.getItem('authToken');
 setAuthToken(token);

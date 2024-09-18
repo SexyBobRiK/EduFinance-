@@ -7,10 +7,8 @@ const AuthenticatedMiddleware = (
     to: RouteLocationNormalized,
     from: RouteLocationNormalized,
     next: NavigationGuardNext) => {
-    const tokenStore = useTokenStore();
-    if (tokenStore.token) {
-        console.log('test');
-        
+    const token = localStorage.getItem('authToken') != null ? true : false;
+    if (token) {   
         next();
     } else {
         next('/');
@@ -32,13 +30,13 @@ const routes: Array<RouteRecordRaw> = [
         path: "/graphs",
         name: "graphs",
         component: () => import("../components/Chart.vue"),
-       // beforeEnter: AuthenticatedMiddleware,
+        beforeEnter: AuthenticatedMiddleware,
     },
     {
         path: "/management",
         name: "Management",
         component: () => import("../components/Management.vue"),
-       // beforeEnter: AuthenticatedMiddleware,
+        beforeEnter: AuthenticatedMiddleware,
     }
 ];
 
